@@ -4,8 +4,8 @@
 ### Project Setup
 - [x] Initialize GitHub repository
 - [x] Set up branch protection rules
-- [ ] Create initial project structure
-- [ ] Set up development environment
+- [x] Create initial project structure
+- [x] Set up development environment
 - [ ] Configure ESLint and Prettier
 - [ ] Create initial README.md
 - [ ] Set up basic CI/CD pipeline
