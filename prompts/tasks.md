@@ -3,7 +3,7 @@
 ## Milestone 1: Basic MVP (2-3 weeks)
 ### Project Setup
 - [x] Initialize GitHub repository
-- [ ] Set up branch protection rules
+- [x] Set up branch protection rules
 - [ ] Create initial project structure
 - [ ] Set up development environment
 - [ ] Configure ESLint and Prettier
