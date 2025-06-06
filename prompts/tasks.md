@@ -5,7 +5,7 @@
 - [x] Initialize GitHub repository
 - [x] Set up branch protection rules
 - [x] Create initial project structure
-- [ ] Set up development environment
+- [x] Set up development environment
 - [ ] Configure ESLint and Prettier
 - [ ] Create initial README.md
 - [ ] Set up basic CI/CD pipeline
