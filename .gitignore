@@ -18,9 +18,14 @@
 .env.test.local
 .env.production.local
 
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # ESLint
 .eslintcache
@@ -28,7 +33,12 @@ yarn-error.log*
 # Prettier
 .prettiercache
 
-# Ignore all .env files except .env.example
+# Ignore all .env files except .env.example and .env.test
 .env
 .env.*
 !.env.example
+!.env.test
+
+# Firebase
+/emulator-data
+.firebase/
