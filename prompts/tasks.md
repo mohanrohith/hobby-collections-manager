@@ -9,7 +9,7 @@
 - [x] Create initial project structure
 - [x] Set up development environment
 - [x] Configure ESLint and Prettier
-- [ ] Create initial README.md
+- [x] Create initial README.md
 - [ ] Set up basic CI/CD pipeline
 - [ ] Configure TypeScript
 - [ ] Set up project dependencies

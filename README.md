@@ -1,98 +1,120 @@
 # Hobby Collections Manager
 
-A modern web application for managing and organizing various collections like diecast cars, Hot Wheels, LEGO sets, Funko Pops, books, and more.
+A modern web application to help collectors catalog and organize various collections (diecast cars, Hot Wheels, LEGO, Funko Pops, books, etc.) in a streamlined, user-friendly way.
 
 ## Features
 
 - 📱 Responsive web application (mobile + desktop)
 - 🔍 Barcode/QR code scanning for quick item addition
-- 📚 Support for multiple collection types:
-  - Diecast Cars
-  - Hot Wheels
-  - LEGO sets
-  - Funko Pops
-  - Books
-- 🔄 Automated item details population via public APIs
-- 🖼️ Flexible image management
-- 🔒 Secure user authentication
-- 📊 Category-based organization
-- 🔎 Advanced search and filtering
-- 📱 Offline support
+- 🤖 Automated item details population via API lookups
+- 📂 Category-based organization and browsing
+- 🔎 Advanced search and filtering capabilities
+- 🖼️ Flexible image handling with auto-fetch and custom uploads
 - 🔄 Real-time sync across devices
+- 🔒 Secure user authentication and data protection
 
-## Tech Stack
+## Technology Stack
 
-- Frontend: React with TypeScript
-- Backend: Firebase
+- **Frontend**: React with TypeScript
+- **Styling**: Tailwind CSS
+- **Backend**: Firebase
   - Authentication
   - Firestore (Database)
   - Storage (Images)
   - Cloud Functions (API integrations)
-- UI: Tailwind CSS
-- State Management: React Context/Redux
-- Testing: Jest, React Testing Library, Cypress
+- **Development Tools**:
+  - ESLint + Prettier for code quality
+  - TypeScript for type safety
+  - Git for version control
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- Git
+- VS Code (recommended) with ESLint and Prettier extensions
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js (v16 or higher)
-- npm or yarn
-- Firebase account
-
-### Installation
-
 1. Clone the repository:
+
    ```bash
-   git clone git@github.com:mohanrohith/hobby-collections-manager.git
+   git clone https://github.com/mohanrohith/hobby-collections-manager.git
    cd hobby-collections-manager
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-   Fill in your Firebase configuration details in the `.env` file.
+3. Start the development server:
 
-4. Start the development server:
    ```bash
-   npm run dev
-   # or
-   yarn dev
+   npm start
    ```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## Available Scripts
+
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner
+- `npm run build` - Builds the app for production
+- `npm run lint` - Runs ESLint to check code quality
+- `npm run lint:fix` - Automatically fixes ESLint issues
+- `npm run format` - Formats code using Prettier
+
+## Development Workflow
+
+1. Create a new branch for your feature:
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes and commit them:
+
+   ```bash
+   git add .
+   git commit -m "Description of your changes"
+   ```
+
+3. Push your branch and create a pull request:
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+4. After review and approval, merge your changes into main.
 
 ## Project Structure
 
 ```
 hobby-collections-manager/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/         # Page components
-│   ├── services/      # API and Firebase services
-│   ├── hooks/         # Custom React hooks
-│   ├── utils/         # Utility functions
-│   ├── types/         # TypeScript type definitions
-│   ├── context/       # React Context providers
-│   ├── assets/        # Static assets
-│   └── config/        # Configuration files
-├── public/            # Public static files
-└── tests/             # Test files
+├── public/                 # Static files
+├── src/                    # Source files
+│   ├── components/         # Reusable components
+│   ├── pages/             # Page components
+│   ├── services/          # API and service functions
+│   ├── hooks/             # Custom React hooks
+│   ├── utils/             # Utility functions
+│   ├── types/             # TypeScript type definitions
+│   ├── context/           # React context providers
+│   ├── assets/            # Images, fonts, etc.
+│   └── config/            # Configuration files
+├── tests/                 # Test files
+└── prompts/              # Project documentation and requirements
 ```
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
 ## License
 
