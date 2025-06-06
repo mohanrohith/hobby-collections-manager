@@ -32,7 +32,7 @@
   - [x] Configure environment-specific Firebase configs
   - [x] Set up environment variable validation
 - [ ] Configure Firebase project-level settings:
-  - [ ] Create separate Firebase projects for each environment
+  - [x] Create separate Firebase projects for each environment
   - [ ] Set up Firebase project configuration files
   - [ ] Configure Firebase security rules per environment
   - [ ] Set up Firebase Storage rules per environment
