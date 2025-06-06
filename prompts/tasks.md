@@ -13,19 +13,19 @@
 - [x] Set up basic CI/CD pipeline
 - [x] Configure TypeScript
 - [x] Set up project dependencies
-- [ ] Create basic folder structure:
-  - [ ] `/src`
-    - [ ] `/components`
-    - [ ] `/pages`
-    - [ ] `/services`
-    - [ ] `/hooks`
-    - [ ] `/utils`
-    - [ ] `/types`
-    - [ ] `/context`
-    - [ ] `/assets`
-    - [ ] `/config`
-  - [ ] `/public`
-  - [ ] `/tests`
+- [x] Create basic folder structure:
+  - [x] `/src`
+    - [x] `/components`
+    - [x] `/pages`
+    - [x] `/services`
+    - [x] `/hooks`
+    - [x] `/utils`
+    - [x] `/types`
+    - [x] `/context`
+    - [x] `/assets`
+    - [x] `/config`
+  - [x] `/public`
+  - [x] `/tests`
 - [ ] Set up environment configuration:
   - [ ] Create `.env.example` template
   - [ ] Set up environment variables for different environments (dev, staging, prod)
