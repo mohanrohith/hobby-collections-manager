@@ -1,3 +1,4 @@
+// Firebase project configuration file
 import { validateEnv } from './validateEnv';
 
 validateEnv();
