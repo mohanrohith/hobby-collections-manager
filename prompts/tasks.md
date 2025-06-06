@@ -35,7 +35,7 @@
   - [x] Create separate Firebase projects for each environment
   - [x] Set up Firebase project configuration files
   - [x] Configure Firebase security rules per environment
-  - [ ] Set up Firebase Storage rules per environment
+  - [x] Set up Firebase Storage rules per environment
   - [ ] Configure Firebase Authentication settings per environment
   - [ ] Set up Firebase Functions configuration per environment
 
