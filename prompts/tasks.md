@@ -26,11 +26,11 @@
     - [x] `/config`
   - [x] `/public`
   - [x] `/tests`
-- [ ] Set up environment configuration:
-  - [ ] Create `.env.example` template
-  - [ ] Set up environment variables for different environments (dev, staging, prod)
-  - [ ] Configure environment-specific Firebase configs
-  - [ ] Set up environment variable validation
+- [x] Set up environment configuration:
+  - [x] Create `.env.example` template
+  - [x] Set up environment variables for different environments (dev, staging, prod)
+  - [x] Configure environment-specific Firebase configs
+  - [x] Set up environment variable validation
 - [ ] Configure Firebase project-level settings:
   - [ ] Create separate Firebase projects for each environment
   - [ ] Set up Firebase project configuration files
