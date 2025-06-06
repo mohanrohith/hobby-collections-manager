@@ -12,7 +12,7 @@
 - [x] Create initial README.md
 - [x] Set up basic CI/CD pipeline
 - [x] Configure TypeScript
-- [ ] Set up project dependencies
+- [x] Set up project dependencies
 - [ ] Create basic folder structure:
   - [ ] `/src`
     - [ ] `/components`
