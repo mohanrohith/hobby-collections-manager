@@ -2,7 +2,7 @@
 
 ## Milestone 1: Basic MVP (2-3 weeks)
 ### Project Setup
-- [ ] Initialize GitHub repository
+- [x] Initialize GitHub repository
 - [ ] Set up branch protection rules
 - [ ] Create initial project structure
 - [ ] Set up development environment
