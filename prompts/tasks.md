@@ -31,13 +31,13 @@
   - [x] Set up environment variables for different environments (dev, staging, prod)
   - [x] Configure environment-specific Firebase configs
   - [x] Set up environment variable validation
-- [ ] Configure Firebase project-level settings:
+- [x] Configure Firebase project-level settings:
   - [x] Create separate Firebase projects for each environment
   - [x] Set up Firebase project configuration files
   - [x] Configure Firebase security rules per environment
   - [x] Set up Firebase Storage rules per environment
-  - [ ] Configure Firebase Authentication settings per environment
-  - [ ] Set up Firebase Functions configuration per environment
+  - [x] Configure Firebase Authentication settings per environment
+  - [x] Set up Firebase Functions configuration per environment
 
 ### Authentication & Basic Setup
 

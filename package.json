@@ -34,7 +34,13 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "firebase": "node ./node_modules/firebase-tools/lib/bin/firebase.js",
+    "firebase:init": "npm run firebase -- init",
+    "emulators": "npm run firebase -- emulators:start",
+    "emulators:export": "npm run firebase -- emulators:export ./emulator-data",
+    "emulators:import": "npm run firebase -- emulators:start --import=./emulator-data",
+    "dev": "concurrently \"npm run start\" \"npm run emulators\""
   },
   "eslintConfig": {
     "extends": [
@@ -60,11 +66,13 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "autoprefixer": "^10.4.14",
+    "concurrently": "^8.2.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "firebase-tools": "^13.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "postcss": "^8.4.31",
