@@ -33,10 +33,11 @@ lerna-debug.log*
 # Prettier
 .prettiercache
 
-# Ignore all .env files except .env.example
+# Ignore all .env files except .env.example and .env.test
 .env
 .env.*
 !.env.example
+!.env.test
 
 # Firebase
 /emulator-data
