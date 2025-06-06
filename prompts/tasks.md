@@ -11,7 +11,7 @@
 - [x] Configure ESLint and Prettier
 - [x] Create initial README.md
 - [x] Set up basic CI/CD pipeline
-- [ ] Configure TypeScript
+- [x] Configure TypeScript
 - [ ] Set up project dependencies
 - [ ] Create basic folder structure:
   - [ ] `/src`
