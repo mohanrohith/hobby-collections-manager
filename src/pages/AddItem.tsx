@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { Timestamp } from 'firebase/firestore';
 import { useAuth } from '../hooks/useAuth';
 import { getCategories, Category } from '../services/categoryService';
+import { addItem } from '../services/itemService';
+import { Item } from '../types/item';
 
 interface FormData {
   name: string;
   category: string;
   manufacturer?: string;
-  yearReleased?: number | undefined;
+  yearReleased?: number;
   condition: string;
   notes?: string;
+  description?: string;
+  subCategory?: string;
+  value?: number;
+  imageUrl?: string;
 }
 
 const initialFormData: FormData = {
   name: '',
   category: '',
   manufacturer: '',
-  yearReleased: undefined,
+  yearReleased: 0,
   condition: 'New',
   notes: '',
+  description: '',
+  subCategory: '',
+  value: 0,
+  imageUrl: '',
 };
 
 const conditions = ['New', 'Like New', 'Very Good', 'Good', 'Fair', 'Poor'];
@@ -75,12 +84,15 @@ const AddItem: React.FC = () => {
     setError(null);
 
     try {
-      const itemsRef = collection(db, 'users', user.uid, 'items');
-      await addDoc(itemsRef, {
+      const itemData: Omit<Item, 'id'> = {
         ...formData,
-        dateAdded: serverTimestamp(),
-      });
+        tags: [], // Initialize with empty tags array
+        userId: user.uid,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      };
 
+      await addItem(user.uid, itemData);
       navigate('/');
     } catch (err) {
       console.error('Error adding item:', err);
