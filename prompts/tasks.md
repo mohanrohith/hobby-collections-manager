@@ -77,19 +77,28 @@
 
 ## Milestone 2: Enhanced Features (2-3 weeks)
 
-### Barcode Scanning
+### LLM/VLM Integration
 
-- [ ] Integrate barcode scanning library
-- [ ] Implement camera access and permissions
-- [ ] Create barcode scanning UI
-- [ ] Add manual barcode entry fallback
-
-### API Integration
-
-- [ ] Set up Cloud Functions for API calls
-- [ ] Implement basic book lookup (ISBN)
-- [ ] Create error handling for API failures
-- [ ] Add manual override for failed lookups
+- [ ] Set up LLM/VLM service integration
+  - [ ] Configure API access and authentication
+  - [ ] Set up model versioning and updates
+  - [ ] Implement rate limiting and quota management
+- [ ] Implement image processing pipeline
+  - [ ] Create image upload component with drag-and-drop
+  - [ ] Implement image preprocessing (resize, normalize)
+  - [ ] Set up progress indicators and status updates
+  - [ ] Handle multiple image uploads
+- [ ] Develop metadata extraction system
+  - [ ] Implement item identification and classification
+  - [ ] Set up manufacturer/brand detection
+  - [ ] Create release year estimation
+  - [ ] Develop condition assessment
+  - [ ] Implement value estimation
+- [ ] Create confidence scoring system
+  - [ ] Implement confidence thresholds
+  - [ ] Set up user feedback mechanism
+  - [ ] Create fallback to manual entry
+  - [ ] Develop error handling and recovery
 
 ### Image Management
 
@@ -97,15 +106,23 @@
 - [ ] Implement basic image upload
 - [ ] Add image preview functionality
 - [ ] Create basic image storage rules
+- [ ] Implement image optimization
+- [ ] Set up thumbnail generation
+- [ ] Create image processing pipeline
+- [ ] Implement multiple image support
 
 ## Milestone 3: Advanced Features (2-3 weeks)
 
 ### Enhanced Search & Filtering
 
 - [ ] Implement advanced search functionality
+  - [ ] Text-based search using Firestore queries
+  - [ ] Visual similarity search using LLM/VLM embeddings
+  - [ ] Hybrid search combining both approaches
 - [ ] Add category-based filtering
 - [ ] Create tag-based filtering
 - [ ] Implement sorting options
+- [ ] Add similarity-based recommendations
 
 ### Additional Collection Types
 
@@ -113,6 +130,7 @@
 - [ ] Implement Funko Pop integration
 - [ ] Add diecast car support
 - [ ] Create collection type templates
+- [ ] Implement type-specific metadata extraction
 
 ### UI/UX Improvements
 
@@ -120,6 +138,9 @@
 - [ ] Implement error handling UI
 - [ ] Add success/error notifications
 - [ ] Improve responsive design
+- [ ] Create AI processing status indicators
+- [ ] Implement confidence score visualization
+- [ ] Add manual correction interface
 
 ## Milestone 4: Polish & Optimization (2 weeks)
 
@@ -129,6 +150,9 @@
 - [ ] Add data caching
 - [ ] Optimize image loading
 - [ ] Implement lazy loading
+- [ ] Optimize LLM/VLM processing
+- [ ] Implement batch processing
+- [ ] Set up result caching
 
 ### Offline Support
 
@@ -136,6 +160,7 @@
 - [ ] Implement sync mechanism
 - [ ] Add offline indicators
 - [ ] Create conflict resolution
+- [ ] Handle offline image uploads
 
 ### Security & Validation
 
@@ -143,6 +168,8 @@
 - [ ] Add input validation
 - [ ] Implement rate limiting
 - [ ] Add data sanitization
+- [ ] Set up API key management
+- [ ] Implement usage quotas
 
 ## Milestone 5: Advanced Features (2-3 weeks)
 
@@ -152,6 +179,7 @@
 - [ ] Implement wishlist functionality
 - [ ] Add collection export
 - [ ] Create import functionality
+- [ ] Add community features
 
 ### Analytics & Reporting
 
@@ -159,6 +187,8 @@
 - [ ] Implement value tracking
 - [ ] Create collection reports
 - [ ] Add data visualization
+- [ ] Track AI processing metrics
+- [ ] Monitor model performance
 
 ### Advanced Image Features
 
@@ -166,6 +196,8 @@
 - [ ] Add multiple image support
 - [ ] Create image carousel
 - [ ] Add image editing capabilities
+- [ ] Implement batch image processing
+- [ ] Add image-based search
 
 ## Milestone 6: Final Polish (1-2 weeks)
 
@@ -175,6 +207,9 @@
 - [ ] Add integration tests
 - [ ] Perform end-to-end testing
 - [ ] Conduct user acceptance testing
+- [ ] Test LLM/VLM integration
+- [ ] Validate image processing
+- [ ] Test performance under load
 
 ### Documentation
 
@@ -182,6 +217,8 @@
 - [ ] Write API documentation
 - [ ] Add code documentation
 - [ ] Create deployment guide
+- [ ] Document LLM/VLM integration
+- [ ] Create troubleshooting guide
 
 ### Deployment
 
@@ -189,6 +226,8 @@
 - [ ] Configure CI/CD pipeline
 - [ ] Perform security audit
 - [ ] Deploy to production
+- [ ] Set up monitoring
+- [ ] Configure alerts
 
 ## Notes
 
@@ -197,3 +236,6 @@
 - Priority should be given to core functionality in early milestones
 - Testing should be ongoing throughout development
 - Security considerations should be addressed at each stage
+- LLM/VLM integration requires careful testing and validation
+- Performance optimization is crucial for image processing
+- User feedback is essential for improving AI accuracy
