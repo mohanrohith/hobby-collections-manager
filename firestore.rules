@@ -26,12 +26,8 @@ service cloud.firestore {
     // User profiles
     match /users/{userId} {
       allow read: if isOwner(userId);
-      allow create: if isAuthenticated() && 
-                      request.auth.uid == userId && 
-                      isValidUserProfile();
-      allow update: if isOwner(userId) && 
-                      request.resource.data.uid == userId &&
-                      request.resource.data.updatedAt is timestamp;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId);
       allow delete: if false; // Prevent user profile deletion
     }
 

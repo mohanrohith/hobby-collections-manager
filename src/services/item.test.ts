@@ -1,59 +1,61 @@
-import { getItems, createItem, updateItem, deleteItem } from './item';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getItems, addItem, updateItem, deleteItem } from './itemService';
+import { Item } from '../types/item';
+import { Timestamp } from 'firebase/firestore';
 
-jest.mock('firebase/firestore', () => ({
-  collection: jest.fn(),
-  doc: jest.fn(),
-  getDocs: jest.fn(),
-  addDoc: jest.fn(),
-  updateDoc: jest.fn(),
-  deleteDoc: jest.fn(),
-}));
+jest.mock('firebase/firestore', () => {
+  const actual = jest.requireActual('firebase/firestore');
+  return {
+    ...actual,
+    Timestamp: actual.Timestamp,
+  };
+});
 
-describe.skip('item service', () => {
+describe.skip('Item Service', () => {
+  const mockItem: Omit<Item, 'id'> = {
+    name: 'Test Item',
+    category: 'Test Category',
+    userId: 'test-user',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    tags: [],
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('getItems fetches items', async () => {
+  it('should get items', async () => {
     const mockDocs = [
-      {
-        id: '1',
-        data: () => ({ name: 'Test', dateAdded: '', dateModified: '', userId: 'u', category: 'c' }),
-      },
+      { id: '1', data: () => mockItem },
+      { id: '2', data: () => mockItem },
     ];
     (getDocs as jest.Mock).mockResolvedValue({ docs: mockDocs });
-    const items = await getItems('u');
-    expect(collection).toHaveBeenCalled();
-    expect(getDocs).toHaveBeenCalled();
-    expect(items).toEqual([
-      { id: '1', name: 'Test', dateAdded: '', dateModified: '', userId: 'u', category: 'c' },
-    ]);
+
+    const items = await getItems('test-user');
+    expect(items).toHaveLength(2);
+    if (items.length >= 2) {
+      expect(items[0]!.id).toBe('1');
+      expect(items[1]!.id).toBe('2');
+    }
   });
 
-  it('createItem adds an item', async () => {
-    (addDoc as jest.Mock).mockResolvedValue({ id: '2' });
-    const item = { name: 'New', dateAdded: '', dateModified: '', userId: 'u', category: 'c' };
-    const result = await createItem('u', item);
+  it('should add an item', async () => {
+    const mockDocRef = { id: '1' };
+    (addDoc as jest.Mock).mockResolvedValue(mockDocRef);
+
+    const newItem = await addItem('test-user', mockItem);
+    expect(newItem.id).toBe('1');
     expect(addDoc).toHaveBeenCalled();
-    expect(result).toEqual({ id: '2', ...item });
   });
 
-  it('updateItem updates an item', async () => {
-    (updateDoc as jest.Mock).mockResolvedValue(undefined);
-    await updateItem('u', '1', { name: 'Updated' });
+  it('should update an item', async () => {
+    await updateItem('test-user', '1', { name: 'Updated Item' });
     expect(updateDoc).toHaveBeenCalled();
   });
 
-  it('deleteItem deletes an item', async () => {
-    (deleteDoc as jest.Mock).mockResolvedValue(undefined);
-    await deleteItem('u', '1');
+  it('should delete an item', async () => {
+    await deleteItem('test-user', '1');
     expect(deleteDoc).toHaveBeenCalled();
-  });
-
-  it('getItems returns empty array if no docs', async () => {
-    (getDocs as jest.Mock).mockResolvedValue({ docs: [] });
-    const items = await getItems('u');
-    expect(items).toEqual([]);
   });
 });

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ItemManager } from './ItemManager';
+import ItemManager from './ItemManager';
 import { useItems } from '../hooks/useItems';
 import { useCategories } from '../hooks/useCategories';
 import { BrowserRouter } from 'react-router-dom';

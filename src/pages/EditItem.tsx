@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { useAuth } from '../hooks/useAuth';
-import { addItem } from '../services/itemService';
 import { Item } from '../types/item';
+import ImageUpload from '../components/ImageUpload';
 
-const ItemManager: React.FC = () => {
+const EditItem: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const [form, setForm] = useState<Partial<Item>>({
+  const [formData, setFormData] = useState<Partial<Item>>({
     name: '',
     category: '',
     description: '',
@@ -18,59 +23,118 @@ const ItemManager: React.FC = () => {
     value: 0,
     imageUrl: '',
   });
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    const fetchItem = async () => {
+      if (!user || !id) return;
+
+      try {
+        const itemRef = doc(db, 'users', user.uid, 'items', id);
+        const itemSnap = await getDoc(itemRef);
+
+        if (!itemSnap.exists()) {
+          setError('Item not found');
+          return;
+        }
+
+        const itemData = itemSnap.data() as Item;
+        setFormData({
+          name: itemData.name,
+          category: itemData.category,
+          description: itemData.description || '',
+          condition: itemData.condition || '',
+          tags: itemData.tags || [],
+          notes: itemData.notes || '',
+          subCategory: itemData.subCategory || '',
+          manufacturer: itemData.manufacturer || '',
+          yearReleased: itemData.yearReleased || 0,
+          value: itemData.value || 0,
+          imageUrl: itemData.imageUrl || '',
+        });
+      } catch (err) {
+        setError('Error loading item');
+        console.error('Error fetching item:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [user, id]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  const handleImageUploaded = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrl: url,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || !id) return;
 
+    setIsSaving(true);
     try {
-      await addItem(user.uid, form as Omit<Item, 'id'>);
-      setSuccess('Item added successfully');
-      setForm({
-        name: '',
-        category: '',
-        description: '',
-        condition: '',
-        tags: [],
-        notes: '',
-        subCategory: '',
-        manufacturer: '',
-        yearReleased: 0,
-        value: 0,
-        imageUrl: '',
-      });
+      const itemRef = doc(db, 'users', user.uid, 'items', id);
+      await updateDoc(itemRef, formData);
+      navigate(`/items/${id}`);
     } catch (err) {
-      setError('Error adding item');
-      console.error('Error adding item:', err);
+      setError('Error updating item');
+      console.error('Error updating item:', err);
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600">{error}</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="mt-4 text-blue-600 hover:text-blue-700"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Item</h1>
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
-            {success}
-          </div>
-        )}
+        <div className="flex justify-between items-center mb-8">
+          <button
+            onClick={() => navigate(`/items/${id}`)}
+            className="text-gray-600 hover:text-gray-900"
+          >
+            ← Back to Item
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -81,7 +145,7 @@ const ItemManager: React.FC = () => {
               type="text"
               id="name"
               name="name"
-              value={form.name}
+              value={formData.name}
               onChange={handleChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -96,7 +160,7 @@ const ItemManager: React.FC = () => {
               type="text"
               id="category"
               name="category"
-              value={form.category}
+              value={formData.category}
               onChange={handleChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -111,7 +175,7 @@ const ItemManager: React.FC = () => {
               type="text"
               id="subCategory"
               name="subCategory"
-              value={form.subCategory}
+              value={formData.subCategory}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
@@ -124,7 +188,7 @@ const ItemManager: React.FC = () => {
             <textarea
               id="description"
               name="description"
-              value={form.description}
+              value={formData.description}
               onChange={handleChange}
               rows={3}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -139,7 +203,7 @@ const ItemManager: React.FC = () => {
               type="text"
               id="manufacturer"
               name="manufacturer"
-              value={form.manufacturer}
+              value={formData.manufacturer}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
@@ -153,7 +217,7 @@ const ItemManager: React.FC = () => {
               type="number"
               id="yearReleased"
               name="yearReleased"
-              value={form.yearReleased || ''}
+              value={formData.yearReleased || ''}
               onChange={handleChange}
               min="1900"
               max={new Date().getFullYear()}
@@ -169,7 +233,7 @@ const ItemManager: React.FC = () => {
               type="text"
               id="condition"
               name="condition"
-              value={form.condition}
+              value={formData.condition}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
@@ -183,7 +247,7 @@ const ItemManager: React.FC = () => {
               type="number"
               id="value"
               name="value"
-              value={form.value || ''}
+              value={formData.value || ''}
               onChange={handleChange}
               min="0"
               step="0.01"
@@ -198,19 +262,28 @@ const ItemManager: React.FC = () => {
             <textarea
               id="notes"
               name="notes"
-              value={form.notes}
+              value={formData.notes}
               onChange={handleChange}
               rows={3}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Image</label>
+            <ImageUpload
+              onImageUploaded={handleImageUploaded}
+              currentImageUrl={formData.imageUrl || ''}
+            />
+          </div>
+
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={isSaving}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              Add Item
+              {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>
@@ -219,4 +292,4 @@ const ItemManager: React.FC = () => {
   );
 };
 
-export default ItemManager;
+export default EditItem;
