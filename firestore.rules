@@ -12,21 +12,16 @@ service cloud.firestore {
     }
 
     function isValidUserProfile() {
-      let requiredFields = ['uid', 'email', 'displayName', 'createdAt', 'updatedAt', 'preferences', 'settings'];
       let data = request.resource.data;
-      
-      return data.keys().hasAll(requiredFields) &&
-             data.uid == request.auth.uid &&
+      return data.email is string &&
              data.createdAt is timestamp &&
-             data.updatedAt is timestamp &&
-             data.preferences is map &&
-             data.settings is map;
+             data.updatedAt is timestamp;
     }
 
     // User profiles
     match /users/{userId} {
-      allow read: if isOwner(userId);
-      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow read: if isAuthenticated();  // Allow reading during auth
+      allow create: if isAuthenticated() && request.auth.uid == userId && isValidUserProfile();
       allow update: if isOwner(userId);
       allow delete: if false; // Prevent user profile deletion
     }
