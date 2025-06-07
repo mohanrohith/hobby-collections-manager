@@ -14,6 +14,7 @@ import { AuthProvider } from './context/AuthContext';
 import { EmulatorTest } from './pages/EmulatorTest';
 import { AuthTest } from './pages/AuthTest';
 import TestFirestoreWrite from './pages/TestFirestoreWrite';
+import Landing from './pages/Landing';
 
 const queryClient = new QueryClient();
 
@@ -40,10 +41,7 @@ const App: React.FC = () => {
         <Router>
           <Routes>
             {/* Public routes */}
-            <Route
-              path="/"
-              element={user ? <Navigate to="/dashboard" /> : <div>Landing Page</div>}
-            />
+            <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 

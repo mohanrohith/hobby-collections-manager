@@ -41,7 +41,10 @@
     "emulators": "npm run firebase -- emulators:start --project demo-project",
     "emulators:export": "npm run firebase -- emulators:export ./emulator-data --project demo-project",
     "emulators:import": "npm run firebase -- emulators:start --import=./emulator-data --project demo-project",
-    "dev": "concurrently \"npm run start\" \"npm run emulators\""
+    "dev": "concurrently \"npm run start\" \"npm run emulators\"",
+    "deploy:rules": "npm run firebase -- deploy --only firestore:rules",
+    "deploy:rules:staging": "npm run firebase -- deploy --only firestore:rules --project hobby-collections-manager-staging",
+    "deploy:rules:prod": "npm run firebase -- deploy --only firestore:rules --project hobby-collections-manager"
   },
   "eslintConfig": {
     "extends": [
