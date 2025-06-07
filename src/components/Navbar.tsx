@@ -45,8 +45,45 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-gray-800">Collections Manager</span>
+            <Link to="/" className="flex-shrink-0 flex items-center gap-3">
+              <svg
+                className="h-8 w-auto"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Logo background */}
+                <rect width="40" height="40" rx="8" fill="#4f46e5" />
+
+                {/* Collection box icon */}
+                <g transform="translate(8, 8)">
+                  {/* Box outline */}
+                  <rect
+                    x="0"
+                    y="0"
+                    width="24"
+                    height="24"
+                    rx="2"
+                    stroke="white"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+
+                  {/* Box lid */}
+                  <path d="M0 8 L24 8" stroke="white" strokeWidth="2" />
+
+                  {/* Collection items */}
+                  <circle cx="6" cy="4" r="1.5" fill="white" />
+                  <circle cx="12" cy="4" r="1.5" fill="white" />
+                  <circle cx="18" cy="4" r="1.5" fill="white" />
+
+                  {/* Bottom items */}
+                  <rect x="4" y="12" width="4" height="4" rx="1" fill="white" />
+                  <rect x="10" y="12" width="4" height="4" rx="1" fill="white" />
+                  <rect x="16" y="12" width="4" height="4" rx="1" fill="white" />
+                </g>
+              </svg>
+              <span className="text-xl font-semibold text-gray-900">Hobby Collections Manager</span>
             </Link>
             {user && (
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
