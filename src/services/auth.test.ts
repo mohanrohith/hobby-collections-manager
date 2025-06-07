@@ -6,6 +6,7 @@ import {
   signOut as fbSignOut,
   sendPasswordResetEmail,
   updateProfile,
+  User,
 } from 'firebase/auth';
 
 describe.skip('authService', () => {
@@ -49,16 +50,16 @@ describe.skip('authService', () => {
 
   it('updateUserProfile updates user profile', async () => {
     (updateProfile as jest.Mock).mockResolvedValue(undefined);
-    const user = { uid: 'u', email: 'e', displayName: 'd' };
+    const user = { uid: 'u', email: 'e', displayName: 'd' } as User;
     await expect(
-      authService.updateUserProfile(user as any, { displayName: 'new' })
+      authService.updateUserProfile(user, { displayName: 'new' })
     ).resolves.toBeUndefined();
     expect(updateProfile).toHaveBeenCalled();
   });
 
   it('convertUser returns AuthUser', () => {
-    const user = { uid: 'u', email: 'e', displayName: 'd', photoURL: 'p' };
-    expect(authService.convertUser(user as any)).toEqual({
+    const user = { uid: 'u', email: 'e', displayName: 'd', photoURL: 'p' } as User;
+    expect(authService.convertUser(user)).toEqual({
       uid: 'u',
       email: 'e',
       displayName: 'd',

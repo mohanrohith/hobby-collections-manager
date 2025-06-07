@@ -4,6 +4,26 @@ import { useItems } from '../hooks/useItems';
 import { useCategories } from '../hooks/useCategories';
 import { BrowserRouter } from 'react-router-dom';
 
+// Mock Firebase
+jest.mock('firebase/firestore', () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  getDoc: jest.fn(),
+  getDocs: jest.fn(),
+  addDoc: jest.fn(),
+  updateDoc: jest.fn(),
+  deleteDoc: jest.fn(),
+  query: jest.fn(),
+  where: jest.fn(),
+  orderBy: jest.fn(),
+  limit: jest.fn(),
+  startAfter: jest.fn(),
+  endBefore: jest.fn(),
+  Timestamp: {
+    now: jest.fn(),
+  },
+}));
+
 // Mock the hooks
 jest.mock('../hooks/useItems');
 jest.mock('../hooks/useCategories');
