@@ -20,11 +20,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # - name: Run ESLint
-      #   run: npm run lint:fix
+      - name: Run ESLint
+        run: npm run lint:fix
 
-      # - name: Run Prettier check
-      #   run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+      - name: Run Prettier check
+        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md}"
 
       - name: Run tests
         run: npm test
