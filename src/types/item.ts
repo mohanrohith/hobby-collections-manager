@@ -1,21 +1,25 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Item {
   id: string;
-  userId: string;
   name: string;
+  description?: string;
   category: string;
   subCategory?: string;
-  manufacturer?: string;
-  yearReleased?: number;
-  tags?: string[];
+  tags: string[];
+  images?: string[];
+  imageUrl?: string;
+  purchaseDate?: Date;
+  purchasePrice?: number;
   condition?: string;
   notes?: string;
+  manufacturer?: string;
+  yearReleased?: number;
+  value?: number;
   status?: 'Owned' | 'Wishlist' | 'Sold';
-  dateAdded: string;
-  dateModified: string;
-  imageUrls?: string[];
-  thumbnailUrl?: string;
-  metadataSource?: 'autoApi' | 'scraped' | 'manual';
-  additionalData?: Record<string, string | number | boolean | null>;
+  userId: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Category {
