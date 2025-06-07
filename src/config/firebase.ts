@@ -7,27 +7,17 @@ import { validateEnv } from './validateEnv';
 
 validateEnv();
 
-// Ensure all environment variables are strings
-const getEnvVar = (key: string): string => {
-  const value = process.env[key];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-  return value;
-};
-
-export const firebaseConfig = {
-  apiKey: getEnvVar('REACT_APP_FIREBASE_API_KEY'),
-  authDomain: getEnvVar('REACT_APP_FIREBASE_AUTH_DOMAIN'),
-  projectId: getEnvVar('REACT_APP_FIREBASE_PROJECT_ID'),
-  storageBucket: getEnvVar('REACT_APP_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: getEnvVar('REACT_APP_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: getEnvVar('REACT_APP_FIREBASE_APP_ID'),
-  measurementId: getEnvVar('REACT_APP_FIREBASE_MEASUREMENT_ID'),
+const firebaseConfig = {
+  apiKey: process.env['REACT_APP_FIREBASE_API_KEY'] as string,
+  authDomain: process.env['REACT_APP_FIREBASE_AUTH_DOMAIN'] as string,
+  projectId: process.env['REACT_APP_FIREBASE_PROJECT_ID'] as string,
+  storageBucket: process.env['REACT_APP_FIREBASE_STORAGE_BUCKET'] as string,
+  messagingSenderId: process.env['REACT_APP_FIREBASE_MESSAGING_SENDER_ID'] as string,
+  appId: process.env['REACT_APP_FIREBASE_APP_ID'] as string,
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Initialize services
 export const auth = getAuth(app);

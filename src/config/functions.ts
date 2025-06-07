@@ -1,7 +1,6 @@
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
-import { app } from './firebase';
 
-const functions = getFunctions(app);
+const functions = getFunctions();
 
 // Connect to emulator in development environment
 if (process.env.NODE_ENV === 'development') {
