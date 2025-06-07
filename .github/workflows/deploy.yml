@@ -3,6 +3,16 @@ name: Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
 
 jobs:
   build-and-deploy:
@@ -28,6 +38,13 @@ jobs:
         env:
           CI: false # This prevents treating warnings as errors
 
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          channelId: ${{ github.event_name == 'workflow_dispatch' && (inputs.environment == 'production' && 'live' || 'staging') || 'live' }}
+          projectId: ${{ github.event_name == 'workflow_dispatch' && (inputs.environment == 'production' && 'hobby-collections-manager' || 'hobby-collections-manager-staging') || 'hobby-collections-manager' }}
 
     # Note: Deployment steps will be added later when we set up Firebase hosting
     # - name: Deploy to Firebase
