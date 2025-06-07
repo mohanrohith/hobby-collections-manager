@@ -61,10 +61,10 @@
 
 ### Core Data Structure
 
-- [ ] Define and implement basic Firestore data model
-- [ ] Create basic CRUD operations for items
-- [ ] Implement basic category management
-- [ ] Set up basic item metadata structure
+- [x] Define and implement basic Firestore data model
+- [x] Create basic CRUD operations for items
+- [x] Implement basic category management
+- [x] Set up basic item metadata structure
 
 ### Basic UI Implementation
 

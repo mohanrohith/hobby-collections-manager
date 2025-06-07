@@ -101,12 +101,14 @@ export const authService = {
   },
 
   // Error Handler
-  handleAuthError(error: any): AuthError {
+  handleAuthError(error: Error | { code?: string; message?: string }): AuthError {
     console.error('Auth Error:', error);
+    const errorCode = 'code' in error ? error.code : 'unknown';
+    const errorMessage = error.message || 'An unknown error occurred';
     return {
       name: 'AuthError',
-      code: error.code || 'unknown',
-      message: error.message || 'An unknown error occurred',
+      code: errorCode,
+      message: errorMessage,
     };
   },
 
