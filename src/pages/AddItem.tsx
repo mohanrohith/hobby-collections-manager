@@ -52,15 +52,13 @@ const AddItem: React.FC = () => {
   );
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [loadingUser, setLoadingUser] = useState(true);
   const storageService = new StorageService();
 
   useEffect(() => {
+    if (!user) return;
+    setLoadingUser(false);
     const fetchCategories = async () => {
-      if (!user) {
-        console.log('No user found, cannot fetch categories');
-        return;
-      }
-
       try {
         const fetchedCategories = await getCategories(user.uid);
 
@@ -130,6 +128,10 @@ const AddItem: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (!user || loadingUser) {
+    return <div className="flex items-center justify-center h-64">Loading user...</div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
