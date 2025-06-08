@@ -1,87 +1,68 @@
-import type {
-  LLMServiceConfig,
-  ImageAnalysisResult,
-  ItemMetadata,
-  ConfidenceScore,
-} from '../../types/llm-vlm/types';
+import { GoogleGenAI } from '@google/genai';
+import { LLMServiceConfig, ImageAnalysisResult } from '../../types/llm-vlm/types';
 
 export class LLMService {
+  private ai: GoogleGenAI;
   private config: LLMServiceConfig;
-  private retryCount = 0;
 
   constructor(config: LLMServiceConfig) {
     this.config = config;
+    this.ai = new GoogleGenAI({ apiKey: config.apiKey });
   }
 
-  private async makeRequest(imageData: Blob): Promise<ImageAnalysisResult> {
-    const formData = new FormData();
-    formData.append('image', imageData);
-    formData.append('model_version', this.config.modelVersion);
+  private cleanJsonResponse(responseText: string): string {
+    // First remove markdown code block formatting
+    const cleaned = responseText.replace(/```json\n?|\n?```/g, '').trim();
 
+    // Then extract just the JSON object using regex
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return jsonMatch[0];
+    }
+    return cleaned;
+  }
+
+  async analyzeImage(imageData: string, category?: string): Promise<ImageAnalysisResult> {
+    const startTime = Date.now();
     try {
-      const response = await fetch(this.config.endpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${this.config.apiKey}`,
-        },
-        body: formData,
+      // Select the appropriate prompt based on category
+      const prompt =
+        category && this.config.categoryPrompts[category]
+          ? this.config.categoryPrompts[category]
+          : this.config.generalPrompt;
+
+      const model = this.ai.models.generateContent({
+        model: this.config.modelName,
+        contents: [
+          {
+            text: prompt || '',
+          },
+          {
+            inlineData: {
+              data: imageData,
+              mimeType: 'image/jpeg',
+            },
+          },
+        ],
       });
 
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+      const response = await model;
+      if (!response.text) {
+        throw new Error('No response text received from the model');
       }
 
-      const result = await response.json();
-      return this.processResponse(result);
+      const cleanedResponse = this.cleanJsonResponse(response.text);
+      const parsedResponse = JSON.parse(cleanedResponse);
+
+      return {
+        metadata: parsedResponse.metadata,
+        confidence: parsedResponse.confidence,
+        processingTime: Date.now() - startTime,
+        modelVersion: this.config.modelName,
+      };
     } catch (error) {
-      if (this.retryCount < (this.config.maxRetries || 3)) {
-        this.retryCount++;
-        return this.makeRequest(imageData);
-      }
+      console.error('Error analyzing image:', error);
       throw error;
     }
-  }
-
-  private processResponse(response: any): ImageAnalysisResult {
-    // Process the raw API response into our standardized format
-    const metadata: ItemMetadata = {
-      name: response.name || '',
-      manufacturer: response.manufacturer,
-      releaseYear: response.release_year,
-      category: response.category,
-      subCategory: response.sub_category,
-      condition: response.condition,
-      estimatedValue: response.estimated_value,
-      additionalMetadata: response.additional_metadata,
-    };
-
-    const confidence: ConfidenceScore = {
-      overall: response.confidence?.overall || 0,
-      scores: {
-        name: response.confidence?.scores?.name,
-        manufacturer: response.confidence?.scores?.manufacturer,
-        releaseYear: response.confidence?.scores?.release_year,
-        category: response.confidence?.scores?.category,
-        subCategory: response.confidence?.scores?.sub_category,
-        condition: response.confidence?.scores?.condition,
-        estimatedValue: response.confidence?.scores?.estimated_value,
-      },
-    };
-
-    return {
-      metadata,
-      confidence,
-      processingTime: response.processing_time || 0,
-      modelVersion: this.config.modelVersion,
-    };
-  }
-
-  public async analyzeImage(imageData: Blob): Promise<ImageAnalysisResult> {
-    this.retryCount = 0;
-    return this.makeRequest(imageData);
-  }
-
-  public async analyzeImages(imageDataArray: Blob[]): Promise<ImageAnalysisResult[]> {
-    return Promise.all(imageDataArray.map((image) => this.analyzeImage(image)));
   }
 }

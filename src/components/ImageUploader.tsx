@@ -1,63 +1,41 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useLLM } from '../../context/llm-vlm/LLMContext';
-import { ImageAnalysisResult } from '../../types/llm-vlm/types';
-import { Category } from './CategorySelector';
+import { useLLM } from '../context/llm-vlm/LLMContext';
+import { ImageAnalysisResult } from '../types/llm-vlm/types';
 
 interface ImageUploaderProps {
   onAnalysisComplete: (result: ImageAnalysisResult) => void;
-  category: Category | undefined;
-  multiple?: boolean;
+  category?: string;
 }
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({
-  onAnalysisComplete,
-  category,
-  multiple = false,
-}) => {
+export const ImageUploader: React.FC<ImageUploaderProps> = ({ onAnalysisComplete, category }) => {
   const { analyzeImage, isAnalyzing, error } = useLLM();
 
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result as string;
-        // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
-        const base64 = base64String.split(',')[1];
-        if (!base64) {
-          reject(new Error('Invalid base64 string format'));
-          return;
-        }
-        resolve(base64);
-      };
-      reader.onerror = () => reject(new Error('Failed to read file'));
-      reader.readAsDataURL(file);
-    });
-  };
-
   const onDrop = useCallback(
-    async (fileArray: File[]) => {
+    async (acceptedFiles: File[]) => {
       try {
-        if (multiple) {
-          for (const file of fileArray) {
-            const base64 = await fileToBase64(file);
+        for (const file of acceptedFiles) {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const base64String = reader.result as string;
+            // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
+            const base64 = base64String.split(',')[1];
+            if (!base64) {
+              throw new Error('Invalid base64 string format');
+            }
             const result = await analyzeImage(base64, category);
             onAnalysisComplete(result);
-          }
-        } else {
-          const file = fileArray[0];
-          if (!file) {
-            throw new Error('No file selected');
-          }
-          const base64 = await fileToBase64(file);
-          const result = await analyzeImage(base64, category);
-          onAnalysisComplete(result);
+          };
+          reader.onerror = () => {
+            throw new Error('Failed to read file');
+          };
+          reader.readAsDataURL(file);
         }
       } catch (error) {
         console.error('Error processing files:', error);
       }
     },
-    [analyzeImage, onAnalysisComplete, category, multiple]
+    [analyzeImage, onAnalysisComplete, category]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -65,7 +43,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     accept: {
       'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
     },
-    multiple,
+    multiple: false,
   });
 
   return (

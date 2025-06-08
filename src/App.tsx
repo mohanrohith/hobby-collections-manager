@@ -17,7 +17,6 @@ import TestFirestoreWrite from './pages/TestFirestoreWrite';
 import Landing from './pages/Landing';
 import { LLMProvider } from './context/llm-vlm/LLMContext';
 import { ItemAnalysis } from './pages/ItemAnalysis';
-import { llmConfig, imageProcessingConfig } from './config/llm-vlm';
 
 const queryClient = new QueryClient();
 
@@ -41,7 +40,7 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <LLMProvider llmConfig={llmConfig} imageProcessingConfig={imageProcessingConfig}>
+        <LLMProvider>
           <Router>
             <Routes>
               {/* Public routes */}
@@ -102,6 +101,16 @@ const App: React.FC = () => {
               />
               <Route
                 path="/item-analysis"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <ItemAnalysis />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/image-test"
                 element={
                   <PrivateRoute>
                     <MainLayout>
