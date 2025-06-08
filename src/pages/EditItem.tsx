@@ -147,18 +147,30 @@ const EditItem: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <button
-            onClick={() => navigate(`/items/${id}`)}
-            className="text-gray-600 hover:text-gray-900"
-          >
-            ← Back to Item
-          </button>
-        </div>
+    <div className="w-full max-w-lg mx-auto px-2 sm:px-0 py-6">
+      <div className="flex justify-between items-center mb-4">
+        <button
+          onClick={() => navigate(`/items/${id}`)}
+          className="text-gray-600 hover:text-gray-900"
+        >
+          ← Back to Item
+        </button>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-4 sm:p-8 space-y-4">
+        <h2 className="text-xl sm:text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight mb-2">
+          Edit Item
+        </h2>
+        {error && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">{error}</h3>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
@@ -170,7 +182,7 @@ const EditItem: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -185,7 +197,7 @@ const EditItem: React.FC = () => {
               value={formData.category}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -199,7 +211,7 @@ const EditItem: React.FC = () => {
               name="subCategory"
               value={formData.subCategory}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -213,7 +225,7 @@ const EditItem: React.FC = () => {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -227,7 +239,7 @@ const EditItem: React.FC = () => {
               name="manufacturer"
               value={formData.manufacturer}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -243,7 +255,7 @@ const EditItem: React.FC = () => {
               onChange={handleChange}
               min="1900"
               max={new Date().getFullYear()}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -257,7 +269,7 @@ const EditItem: React.FC = () => {
               name="condition"
               value={formData.condition}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -273,7 +285,7 @@ const EditItem: React.FC = () => {
               onChange={handleChange}
               min="0"
               step="0.01"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -287,7 +299,7 @@ const EditItem: React.FC = () => {
               value={formData.notes}
               onChange={handleChange}
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -305,7 +317,7 @@ const EditItem: React.FC = () => {
                 setFormData((prev) => ({ ...prev, tags }));
               }}
               placeholder="Enter tags separated by commas"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -325,25 +337,17 @@ const EditItem: React.FC = () => {
               />
             )}
           </div>
-
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => navigate(`/items/${id}`)}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="pt-4 flex flex-col gap-2">
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="w-full py-3 px-4 rounded-md bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition-colors text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

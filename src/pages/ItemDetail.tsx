@@ -222,8 +222,16 @@ const ItemDetail: React.FC = () => {
 
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="text-sm text-gray-500">
-              <p>Added on {item.createdAt.toDate().toLocaleDateString()}</p>
-              <p>Last updated on {item.updatedAt.toDate().toLocaleDateString()}</p>
+              {item.createdAt ? (
+                <p>Added on {item.createdAt.toDate().toLocaleDateString()}</p>
+              ) : (
+                <p>Added date not available</p>
+              )}
+              {item.updatedAt ? (
+                <p>Last updated on {item.updatedAt.toDate().toLocaleDateString()}</p>
+              ) : (
+                <p>Last updated date not available</p>
+              )}
             </div>
           </div>
         </div>

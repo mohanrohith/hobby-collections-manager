@@ -17,6 +17,7 @@ import TestFirestoreWrite from './pages/TestFirestoreWrite';
 import Landing from './pages/Landing';
 import { LLMProvider } from './context/llm-vlm/LLMContext';
 import { ItemAnalysis } from './pages/ItemAnalysis';
+import AutoAddItem from './pages/AutoAddItem';
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,16 @@ const App: React.FC = () => {
                   <PrivateRoute>
                     <MainLayout>
                       <AddItem />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/items/auto-add"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <AutoAddItem />
                     </MainLayout>
                   </PrivateRoute>
                 }

@@ -113,7 +113,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <label className="cursor-pointer bg-white border border-blue-600 text-blue-600 font-semibold shadow hover:bg-blue-50 transition-colors px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
           {isUploading ? 'Uploading...' : 'Add Images'}
           <input
             type="file"

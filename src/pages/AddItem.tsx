@@ -134,16 +134,16 @@ const AddItem: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="md:flex md:items-center md:justify-between">
+    <div className="w-full max-w-lg mx-auto px-2 sm:px-0 py-6">
+      <div className="md:flex md:items-center md:justify-between mb-4">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
             Add New Item
           </h2>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-4 sm:p-8 space-y-4">
         {error && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
@@ -166,7 +166,7 @@ const AddItem: React.FC = () => {
               required
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -181,7 +181,7 @@ const AddItem: React.FC = () => {
               value={formData.category}
               onChange={handleChange}
               disabled={loadingCategories}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
@@ -205,7 +205,7 @@ const AddItem: React.FC = () => {
               id="manufacturer"
               value={formData.manufacturer}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -219,7 +219,7 @@ const AddItem: React.FC = () => {
               id="yearReleased"
               value={formData.yearReleased || ''}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -233,7 +233,7 @@ const AddItem: React.FC = () => {
               required
               value={formData.condition}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             >
               {conditions.map((condition) => (
                 <option key={condition} value={condition}>
@@ -253,7 +253,7 @@ const AddItem: React.FC = () => {
               rows={3}
               value={formData.notes}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-sm py-2"
             />
           </div>
 
@@ -263,20 +263,13 @@ const AddItem: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-end space-x-3">
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Cancel
-          </button>
+        <div className="pt-4 flex flex-col gap-2">
           <button
             type="submit"
-            disabled={loading || loadingCategories}
-            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            disabled={loading}
+            className="w-full py-3 px-4 rounded-md bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition-colors text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            {loading ? 'Adding...' : 'Add Item'}
+            {loading ? 'Saving...' : 'Save Item'}
           </button>
         </div>
       </form>
