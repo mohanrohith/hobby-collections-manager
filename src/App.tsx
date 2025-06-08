@@ -15,6 +15,9 @@ import { EmulatorTest } from './pages/EmulatorTest';
 import { AuthTest } from './pages/AuthTest';
 import TestFirestoreWrite from './pages/TestFirestoreWrite';
 import Landing from './pages/Landing';
+import { LLMProvider } from './context/llm-vlm/LLMContext';
+import { ItemAnalysis } from './pages/ItemAnalysis';
+import { llmConfig, imageProcessingConfig } from './config/llm-vlm';
 
 const queryClient = new QueryClient();
 
@@ -38,69 +41,81 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+        <LLMProvider llmConfig={llmConfig} imageProcessingConfig={imageProcessingConfig}>
+          <Router>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
 
-            {/* Protected routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute>
-                  <MainLayout>
-                    <Dashboard />
-                  </MainLayout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/items/new"
-              element={
-                <PrivateRoute>
-                  <MainLayout>
-                    <AddItem />
-                  </MainLayout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/items/:id"
-              element={
-                <PrivateRoute>
-                  <MainLayout>
-                    <ItemDetail />
-                  </MainLayout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/items/:id/edit"
-              element={
-                <PrivateRoute>
-                  <MainLayout>
-                    <EditItem />
-                  </MainLayout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/categories"
-              element={
-                <PrivateRoute>
-                  <MainLayout>
-                    <Categories />
-                  </MainLayout>
-                </PrivateRoute>
-              }
-            />
-            <Route path="/emulator-test" element={<EmulatorTest />} />
-            <Route path="/auth-test" element={<AuthTest />} />
-            <Route path="/test-firestore" element={<TestFirestoreWrite />} />
-          </Routes>
-        </Router>
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <Dashboard />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/items/new"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <AddItem />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/items/:id"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <ItemDetail />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/items/:id/edit"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <EditItem />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/categories"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <Categories />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/item-analysis"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <ItemAnalysis />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/emulator-test" element={<EmulatorTest />} />
+              <Route path="/auth-test" element={<AuthTest />} />
+              <Route path="/test-firestore" element={<TestFirestoreWrite />} />
+            </Routes>
+          </Router>
+        </LLMProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
