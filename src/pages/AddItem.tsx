@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp, updateDoc, doc } from 'firebase/firestore';
 import { useAuth } from '../hooks/useAuth';
 import { getCategories, Category } from '../services/categoryService';
 import { addItem } from '../services/itemService';
 import { Item } from '../types/item';
+import { ImageGallery } from '../components/ImageGallery/ImageGallery';
+import { StorageService } from '../services/image-processing/storageService';
+import { db } from '../config/firebase';
 
 interface FormData {
   name: string;
@@ -17,6 +20,8 @@ interface FormData {
   subCategory?: string;
   value?: number;
   imageUrl?: string;
+  tags?: string[];
+  imageUrls?: string[];
 }
 
 const initialFormData: FormData = {
@@ -30,6 +35,8 @@ const initialFormData: FormData = {
   subCategory: '',
   value: 0,
   imageUrl: '',
+  tags: [],
+  imageUrls: [],
 };
 
 const conditions = ['New', 'Like New', 'Very Good', 'Good', 'Fair', 'Poor'];
@@ -40,8 +47,12 @@ const AddItem: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [tempItemId] = useState(
+    () => `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  );
   const navigate = useNavigate();
   const { user } = useAuth();
+  const storageService = new StorageService();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -50,10 +61,9 @@ const AddItem: React.FC = () => {
         return;
       }
 
-      console.log('Fetching categories for user:', user.uid);
       try {
         const fetchedCategories = await getCategories(user.uid);
-        console.log('Fetched categories:', fetchedCategories);
+
         setCategories(fetchedCategories);
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -76,6 +86,15 @@ const AddItem: React.FC = () => {
     }));
   };
 
+  const handleImageSelect = (url: string) => {
+    setFormData((prev) => {
+      return {
+        ...prev,
+        imageUrl: url,
+      };
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -84,16 +103,26 @@ const AddItem: React.FC = () => {
     setError(null);
 
     try {
-      const itemData: Omit<Item, 'id'> = {
-        ...formData,
-        tags: [], // Initialize with empty tags array
+      const { imageUrl, tags, imageUrls, ...rest } = formData;
+      const newItem: Omit<Item, 'id'> = {
+        ...rest,
         userId: user.uid,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
+        tags: tags || [],
+        imageUrls: imageUrls || [],
+        ...(imageUrl ? { imageUrl } : {}),
       };
 
-      await addItem(user.uid, itemData);
-      navigate('/');
+      const itemId = await addItem(user.uid, newItem);
+      const newImageUrls = await storageService.moveAllImagesFromTempToPermanent(
+        user.uid,
+        tempItemId,
+        itemId
+      );
+      const docRef = doc(db, 'users', user.uid, 'items', itemId);
+      await updateDoc(docRef, { imageUrls: newImageUrls });
+      navigate(`/items/${itemId}`);
     } catch (err) {
       console.error('Error adding item:', err);
       setError('Failed to add item. Please try again.');
@@ -224,6 +253,11 @@ const AddItem: React.FC = () => {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Images</label>
+            <ImageGallery itemId={tempItemId} onImageSelect={handleImageSelect} />
           </div>
         </div>
 

@@ -9,6 +9,7 @@ export interface Item {
   tags: string[];
   images?: string[];
   imageUrl?: string;
+  imageUrls?: string[];
   purchaseDate?: Date;
   purchasePrice?: number;
   condition?: string;
