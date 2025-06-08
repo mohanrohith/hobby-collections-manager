@@ -116,9 +116,9 @@
 ### Enhanced Search & Filtering
 
 - [ ] Implement advanced search functionality
-  - [ ] Text-based search using Firestore queries
-  - [ ] Visual similarity search using LLM/VLM embeddings
-  - [ ] Hybrid search combining both approaches
+- [x] Text-based search using Firestore queries
+- [ ] Visual similarity search using LLM/VLM embeddings
+- [ ] Hybrid search combining both approaches
 - [ ] Add category-based filtering
 - [ ] Create tag-based filtering
 - [ ] Implement sorting options
