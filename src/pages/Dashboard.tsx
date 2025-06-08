@@ -6,6 +6,7 @@ import { getCategories } from '../services/categoryService';
 import { Item } from '../types/item';
 import { Category } from '../services/categoryService';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import GridItem from '../components/Dashboard/GridItem';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -120,26 +121,7 @@ const Dashboard: React.FC = () => {
       {/* Items Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => navigate(`/items/${item.id}`)}
-            className="bg-white rounded-lg shadow overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
-          >
-            {item.imageUrl && (
-              <div className="aspect-w-1 aspect-h-1">
-                <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-cover" />
-              </div>
-            )}
-            <div className="p-4">
-              <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-              <p className="text-sm text-gray-500">{item.category}</p>
-              {item.condition && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-2">
-                  {item.condition}
-                </span>
-              )}
-            </div>
-          </div>
+          <GridItem key={item.id} item={item} onClick={() => navigate(`/items/${item.id}`)} />
         ))}
       </div>
 

@@ -16,90 +16,145 @@ export class ImageProcessingService {
     };
   }
 
-  private validateImage(file: File): void {
-    if (!this.options.allowedFormats?.includes(file.type)) {
-      throw new Error(
-        `Unsupported image format. Allowed formats: ${this.options.allowedFormats?.join(', ')}`
-      );
+  async processImage(file: File): Promise<ImageProcessingResult> {
+    // Validate file size
+    if (file.size > (this.options.maxSize || 5 * 1024 * 1024)) {
+      throw new Error('File size exceeds maximum allowed size');
     }
 
-    if (file.size > (this.options.maxSize || 0)) {
-      throw new Error(`Image size exceeds maximum allowed size of ${this.options.maxSize} bytes`);
+    // Validate file format
+    if (this.options.allowedFormats && !this.options.allowedFormats.includes(file.type)) {
+      throw new Error('File format not supported');
+    }
+
+    // Create a blob URL for the image
+    const blobUrl = URL.createObjectURL(file);
+
+    try {
+      // Load the image
+      const img = await this.loadImage(blobUrl);
+
+      // Get original dimensions
+      const originalDimensions = {
+        width: img.width,
+        height: img.height,
+      };
+
+      // Resize if needed
+      const resizedImage = await this.resizeImage(img);
+
+      // Convert to blob
+      const processedBlob = await this.imageToBlob(resizedImage, file.type);
+
+      return {
+        processedImage: processedBlob,
+        originalSize: file.size,
+        processedSize: processedBlob.size,
+        format: file.type,
+        dimensions: originalDimensions,
+      };
+    } finally {
+      // Clean up blob URL
+      URL.revokeObjectURL(blobUrl);
     }
   }
 
-  private async resizeImage(imageData: Blob): Promise<Blob> {
+  async generateThumbnail(imageBlob: Blob): Promise<Blob> {
+    const blobUrl = URL.createObjectURL(imageBlob);
+    try {
+      const img = await this.loadImage(blobUrl);
+      const thumbnailImage = await this.resizeImage(img, {
+        width: 200,
+        height: 200,
+        maintainAspectRatio: true,
+      });
+      return this.imageToBlob(thumbnailImage, imageBlob.type);
+    } finally {
+      URL.revokeObjectURL(blobUrl);
+    }
+  }
+
+  private loadImage(url: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('Failed to get canvas context'));
-          return;
-        }
-
-        let { width, height } = img;
-        const maxWidth = this.options.resizeOptions?.width || 1024;
-        const maxHeight = this.options.resizeOptions?.height || 1024;
-
-        if (this.options.resizeOptions?.maintainAspectRatio) {
-          const ratio = Math.min(maxWidth / width, maxHeight / height);
-          width *= ratio;
-          height *= ratio;
-        } else {
-          width = maxWidth;
-          height = maxHeight;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error('Failed to create blob from canvas'));
-            }
-          },
-          'image/jpeg',
-          0.9
-        );
-      };
-
-      img.onerror = () => reject(new Error('Failed to load image'));
-      img.src = URL.createObjectURL(imageData);
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
     });
   }
 
-  public async processImage(file: File): Promise<ImageProcessingResult> {
-    this.validateImage(file);
+  private async resizeImage(
+    img: HTMLImageElement,
+    options?: { width?: number; height?: number; maintainAspectRatio?: boolean }
+  ): Promise<HTMLImageElement> {
+    const {
+      width,
+      height,
+      maintainAspectRatio = true,
+    } = options || this.options.resizeOptions || {};
 
-    const processedImage = await this.resizeImage(file);
-    const dimensions = await this.getImageDimensions(processedImage);
+    if (!width && !height) {
+      return img;
+    }
 
-    return {
-      processedImage,
-      originalSize: file.size,
-      processedSize: processedImage.size,
-      format: file.type,
-      dimensions,
-    };
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      throw new Error('Could not get canvas context');
+    }
+
+    let newWidth = width || img.width;
+    let newHeight = height || img.height;
+
+    if (maintainAspectRatio) {
+      const aspectRatio = img.width / img.height;
+      if (width && height) {
+        if (width / height > aspectRatio) {
+          newWidth = height * aspectRatio;
+        } else {
+          newHeight = width / aspectRatio;
+        }
+      } else if (width) {
+        newHeight = width / aspectRatio;
+      } else if (height) {
+        newWidth = height * aspectRatio;
+      }
+    }
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+    const resizedImg = new Image();
+    resizedImg.src = canvas.toDataURL(img.src);
+    return resizedImg;
   }
 
-  private async getImageDimensions(blob: Blob): Promise<{ width: number; height: number }> {
+  private async imageToBlob(img: HTMLImageElement, type: string): Promise<Blob> {
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        resolve({
-          width: img.width,
-          height: img.height,
-        });
-      };
-      img.onerror = () => reject(new Error('Failed to load image'));
-      img.src = URL.createObjectURL(blob);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('Could not get canvas context'));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to convert image to blob'));
+          }
+        },
+        type,
+        0.9
+      );
     });
   }
 

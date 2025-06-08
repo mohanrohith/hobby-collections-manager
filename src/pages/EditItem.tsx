@@ -4,7 +4,8 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useAuth } from '../hooks/useAuth';
 import { Item } from '../types/item';
-import ImageUpload from '../components/ImageUpload';
+import { ImageGallery } from '../components/ImageGallery/ImageGallery';
+import { StorageService } from '../services/image-processing/storageService';
 
 const EditItem: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,11 +22,13 @@ const EditItem: React.FC = () => {
     manufacturer: '',
     yearReleased: 0,
     value: 0,
-    imageUrl: '',
+    imageUrls: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deletedImageUrls, setDeletedImageUrls] = useState<string[]>([]);
+  const storageService = new StorageService();
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -52,7 +55,7 @@ const EditItem: React.FC = () => {
           manufacturer: itemData.manufacturer || '',
           yearReleased: itemData.yearReleased || 0,
           value: itemData.value || 0,
-          imageUrl: itemData.imageUrl || '',
+          imageUrls: itemData.imageUrls || [],
         });
       } catch (err) {
         setError('Error loading item');
@@ -75,21 +78,40 @@ const EditItem: React.FC = () => {
     }));
   };
 
-  const handleImageUploaded = (url: string) => {
+  const handleImageSelect = (url: string) => {
+    if ((formData.imageUrls || []).includes(url)) {
+      // If clicking the already selected image, do nothing
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
-      imageUrl: url,
+      imageUrls: [...(prev.imageUrls || []), url],
     }));
+  };
+
+  const handleImageDelete = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrls: (prev.imageUrls || []).filter((imgUrl) => imgUrl !== url),
+    }));
+    setDeletedImageUrls((prev) => [...prev, url]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !id) return;
-
     setIsSaving(true);
     try {
+      // Delete images marked for deletion
+      for (const url of deletedImageUrls) {
+        await storageService.deleteImage(url);
+      }
       const itemRef = doc(db, 'users', user.uid, 'items', id);
-      await updateDoc(itemRef, formData);
+      await updateDoc(itemRef, {
+        ...formData,
+        updatedAt: new Date(),
+        imageUrls: (formData.imageUrls || []).filter((url) => !!url),
+      });
       navigate(`/items/${id}`);
     } catch (err) {
       setError('Error updating item');
@@ -270,18 +292,52 @@ const EditItem: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Image</label>
-            <ImageUpload
-              onImageUploaded={handleImageUploaded}
-              currentImageUrl={formData.imageUrl || ''}
+            <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+              Tags
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              value={formData.tags?.join(', ') || ''}
+              onChange={(e) => {
+                const tags = e.target.value.split(',').map((tag) => tag.trim());
+                setFormData((prev) => ({ ...prev, tags }));
+              }}
+              placeholder="Enter tags separated by commas"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
 
-          <div className="flex justify-end">
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Images</h3>
+              <p className="text-sm text-gray-500">Upload or select an image from the gallery</p>
+            </div>
+            {user && id && (
+              <ImageGallery
+                itemId={id}
+                userId={user.uid}
+                onImageSelect={handleImageSelect}
+                selectedImageUrls={formData.imageUrls || []}
+                onImagesChange={(urls) => setFormData((prev) => ({ ...prev, imageUrls: urls }))}
+                onImageDelete={handleImageDelete}
+              />
+            )}
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => navigate(`/items/${id}`)}
+              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
             >
               {isSaving ? 'Saving...' : 'Save Changes'}
             </button>

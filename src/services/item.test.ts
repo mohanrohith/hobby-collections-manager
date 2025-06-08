@@ -19,6 +19,7 @@ describe.skip('Item Service', () => {
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
     tags: [],
+    imageUrl: '',
   };
 
   beforeEach(() => {
@@ -45,7 +46,7 @@ describe.skip('Item Service', () => {
     (addDoc as jest.Mock).mockResolvedValue(mockDocRef);
 
     const newItem = await addItem('test-user', mockItem);
-    expect(newItem.id).toBe('1');
+    expect(newItem).toBe('1');
     expect(addDoc).toHaveBeenCalled();
   });
 

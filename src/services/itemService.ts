@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Item } from '../types/item';
+import { StorageService } from '../services/image-processing/storageService';
 
 export const getItems = async (userId: string): Promise<Item[]> => {
   try {
@@ -31,7 +32,7 @@ export const getItems = async (userId: string): Promise<Item[]> => {
   }
 };
 
-export const addItem = async (userId: string, item: Omit<Item, 'id'>): Promise<Item> => {
+export const addItem = async (userId: string, item: Omit<Item, 'id'>): Promise<string> => {
   try {
     const itemsRef = collection(db, 'users', userId, 'items');
     const docRef = await addDoc(itemsRef, {
@@ -40,10 +41,35 @@ export const addItem = async (userId: string, item: Omit<Item, 'id'>): Promise<I
       updatedAt: Timestamp.now(),
     });
 
-    return {
-      id: docRef.id,
-      ...item,
-    };
+    // If the item has a temporary image, move it to the permanent location
+    if (item.imageUrl && item.imageUrl.includes('/temp/')) {
+      const storageService = new StorageService();
+      const filename = item.imageUrl.split('/').pop();
+      if (filename) {
+        const newPath = `users/${userId}/items/${docRef.id}/${filename}`;
+        const oldPath = item.imageUrl.split('/').slice(-3).join('/');
+
+        await storageService.moveImage(oldPath, newPath);
+
+        // Update the imageUrl in Firestore with the new permanent path
+        let newImageUrl;
+        if (process.env.NODE_ENV === 'development') {
+          // In development, use the emulator URL
+          newImageUrl = `http://localhost:9199/v0/b/${
+            process.env['REACT_APP_FIREBASE_STORAGE_BUCKET']
+          }/o/${encodeURIComponent(newPath)}`;
+        } else {
+          // In production, use the Firebase Storage URL
+          newImageUrl = `https://storage.googleapis.com/${
+            process.env['REACT_APP_FIREBASE_STORAGE_BUCKET']
+          }/${encodeURIComponent(newPath)}`;
+        }
+
+        await updateDoc(docRef, { imageUrl: newImageUrl });
+      }
+    }
+
+    return docRef.id;
   } catch (error) {
     console.error('Error adding item:', error);
     throw error;
