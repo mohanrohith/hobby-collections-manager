@@ -38,20 +38,12 @@ export const Navigation: React.FC = () => {
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-2 z-10 transform transition-transform duration-200 ease-in-out">
               <Link
-                to="/emulator-test"
+                to="/devtools"
                 className={`block px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200 ${
-                  isActive('/emulator-test') ? 'text-blue-400' : ''
+                  isActive('/devtools') ? 'text-blue-400' : ''
                 }`}
               >
-                Emulator Test
-              </Link>
-              <Link
-                to="/auth-test"
-                className={`block px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200 ${
-                  isActive('/auth-test') ? 'text-blue-400' : ''
-                }`}
-              >
-                Auth Test
+                Devtools
               </Link>
             </div>
           )}

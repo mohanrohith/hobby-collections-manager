@@ -12,12 +12,11 @@ import Categories from './pages/Categories';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/AuthContext';
 import { EmulatorTest } from './pages/EmulatorTest';
-import { AuthTest } from './pages/AuthTest';
-import TestFirestoreWrite from './pages/TestFirestoreWrite';
 import Landing from './pages/Landing';
 import { LLMProvider } from './context/llm-vlm/LLMContext';
 import { ItemAnalysis } from './pages/ItemAnalysis';
 import AutoAddItem from './pages/AutoAddItem';
+import Devtools from './pages/Devtools';
 
 const queryClient = new QueryClient();
 
@@ -130,9 +129,26 @@ const App: React.FC = () => {
                   </PrivateRoute>
                 }
               />
-              <Route path="/emulator-test" element={<EmulatorTest />} />
-              <Route path="/auth-test" element={<AuthTest />} />
-              <Route path="/test-firestore" element={<TestFirestoreWrite />} />
+              <Route
+                path="/emulator-test"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <EmulatorTest />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/devtools"
+                element={
+                  <PrivateRoute>
+                    <MainLayout>
+                      <Devtools />
+                    </MainLayout>
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </Router>
         </LLMProvider>
