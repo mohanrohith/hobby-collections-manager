@@ -122,18 +122,6 @@ const Navbar: React.FC = () => {
             >
               Categories
             </Link>
-            <Link
-              to="/items/auto-add"
-              className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-            >
-              Auto Add Item
-            </Link>
-            <Link
-              to="/image-test"
-              className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-            >
-              Image Test
-            </Link>
           </div>
         )}
       </div>
@@ -151,18 +139,6 @@ const Navbar: React.FC = () => {
             className="px-4 py-3 text-left text-gray-700 hover:bg-gray-100 border-b border-gray-100 w-full"
           >
             Categories
-          </Link>
-          <Link
-            to="/items/auto-add"
-            className="px-4 py-3 text-left text-gray-700 hover:bg-gray-100 border-b border-gray-100 w-full"
-          >
-            Auto Add Item
-          </Link>
-          <Link
-            to="/image-test"
-            className="px-4 py-3 text-left text-gray-700 hover:bg-gray-100 w-full"
-          >
-            Image Test
           </Link>
         </div>
       )}
@@ -202,7 +178,7 @@ const Navbar: React.FC = () => {
                     </div>
                   </div>
                   <Link
-                    to="/emulator-test"
+                    to="/devtools"
                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
                     onClick={() => setIsDropdownOpen(false)}
                   >
@@ -217,31 +193,10 @@ const Navbar: React.FC = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        d="M15.232 5.232l3.536 3.536M9 11l6 6M7.5 7.5l9 9M21 21l-6-6M3 3l6 6"
                       />
                     </svg>
-                    Emulator Test
-                  </Link>
-                  <Link
-                    to="/auth-test"
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    <svg
-                      className="mr-3 h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
-                    Auth Test
+                    Devtools
                   </Link>
                   <div className="border-t border-gray-100 my-1"></div>
                   <button
